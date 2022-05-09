@@ -5,7 +5,7 @@ from requests import get
 
 
 base_url = 'https://api.sleeper.app/v1/'
-league_id = '000000000000000000'
+league_id = '784488936675385344'
 league_url = base_url + 'league/' + str(league_id) + '/'
 
 
@@ -54,11 +54,12 @@ def resolve_ids_to_names_and_attributelists(ownerid_to_playerids, ownerid_to_own
             height = player["height"]
             weight = player["weight"]
             college = player["college"]
+            team = player["team"]
             fantasy_positions = ",".join(player["fantasy_positions"])
 
-            ownerdisplayname_to_playerattributelists[ownerdisplayname] += [[full_name, age, years_exp, fantasy_positions, height, weight, college]]
+            ownerdisplayname_to_playerattributelists[ownerdisplayname] += [[full_name, age, years_exp, team, fantasy_positions, height, weight, college]]
     
-    playerattributelist_columns = ['Name', 'Age', "YoE", "Eligibility", "Height", "Weight", "College"]
+    playerattributelist_columns = ['Name', 'Age', "YoE", "Team", "Eligibility", "Height", "Weight", "College"]
     return ownerdisplayname_to_playerattributelists, playerattributelist_columns
 
 
@@ -69,20 +70,10 @@ def get_ownerid_to_playerids(rosters):
         owner_id = roster["owner_id"]
         ownerid_to_playerids[owner_id] = []
     
-        for taxi_playerid in roster["taxi"]:
-            if not is_int(taxi_playerid):
+        for playerid in roster["players"]:
+            if not is_int(playerid):
                 continue
-            ownerid_to_playerids[owner_id] += [taxi_playerid]
-
-        for starter_playerid in roster["starters"]:
-            if not is_int(starter_playerid):
-                continue
-            ownerid_to_playerids[owner_id] += [starter_playerid]
-
-        for bench_playerid in roster["players"]:
-            if not is_int(bench_playerid):
-                continue
-            ownerid_to_playerids[owner_id] += [bench_playerid]
+            ownerid_to_playerids[owner_id] += [playerid]
 
     return ownerid_to_playerids
 
